@@ -9,10 +9,16 @@ class CategorySeeder extends Seeder
 {
     public function run()
     {
-        Category::insert([
-            ['name' => 'IT Support'],
-            ['name' => 'HR'],
-            ['name' => 'Finance'],
-        ]);
+        $categories = [
+            ['id' => 1, 'name' => 'Software'],
+            ['id' => 2, 'name' => 'Hardware'],
+            ['id' => 3, 'name' => 'Network'],
+            ['id' => 4, 'name' => 'Email'],
+            ['id' => 5, 'name' => 'Others'],
+        ];
+
+        foreach ($categories as $category) {
+            Category::updateOrInsert(['id' => $category['id']], $category);
+        }
     }
 }

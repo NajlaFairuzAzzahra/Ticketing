@@ -14,8 +14,24 @@ class Ticket extends Model
         'description', 'request_date', 'organization', 'requester', 'status'
     ];
 
+    protected $casts = [
+        'status' => 'string', // Laravel akan membaca ENUM sebagai string
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function category()
+    {
+    return $this->belongsTo(Category::class, 'category_id');
+    }
+
+    public function setStatusAttribute($value)
+    {
+    $allowedStatuses = ['Open', 'In Progress', 'Closed'];
+    $this->attributes['status'] = in_array($value, $allowedStatuses) ? $value : 'Open';
+    }
+
 }

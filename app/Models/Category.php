@@ -10,12 +10,4 @@ class Category extends Model
     use HasFactory;
 
     protected $fillable = ['name'];
-
-    /**
-     * Relasi: Kategori dimiliki oleh banyak tiket.
-     */
-    public function tickets()
-    {
-        return $this->hasMany(Ticket::class);
-    }
 }
