@@ -7,7 +7,7 @@
 
         <title>{{ config('app.name', 'Laravel') }}</title>
 
-        <!-- Tailwind CSS CDN -->
+        <!-- Tailwind CSS -->
         <script src="https://cdn.tailwindcss.com"></script>
 
         <!-- Fonts -->
@@ -16,19 +16,44 @@
     <body class="bg-gray-100 font-sans">
         <!-- Layout Grid -->
         <div class="min-h-screen grid grid-cols-12">
+
             <!-- Sidebar -->
             <aside class="col-span-3 bg-gray-800 text-white p-6">
                 <h1 class="text-xl font-bold mb-6">Helpdesk</h1>
+
                 <nav class="space-y-4">
-                    <a href="{{ route('user.dashboard') }}" class="block px-4 py-2 rounded hover:bg-gray-700 {{ request()->routeIs('user.dashboard') ? 'bg-gray-700' : '' }}">
-                        Dashboard
-                    </a>
-                    <a href="{{ route('user.tickets.index') }}" class="block px-4 py-2 rounded hover:bg-gray-700 {{ request()->routeIs('user.tickets.*') ? 'bg-gray-700' : '' }}">
-                        Daftar Tiket
-                    </a>
-                    <a href="{{ route('profile') }}" class="block px-4 py-2 rounded hover:bg-gray-700 {{ request()->routeIs('profile') ? 'bg-gray-700' : '' }}">
-                        Profil
-                    </a>
+                    @if(Auth::user()->role->name == 'Admin')
+                        <!-- Sidebar untuk Admin -->
+                        <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 rounded hover:bg-gray-700 {{ request()->routeIs('admin.dashboard') ? 'bg-gray-700' : '' }}">
+                            Dashboard Admin
+                        </a>
+                        <a href="{{ route('admin.tickets') }}" class="block px-4 py-2 rounded hover:bg-gray-700 {{ request()->routeIs('admin.tickets') ? 'bg-gray-700' : '' }}">
+                            Kelola Tiket
+                        </a>
+                        <a href="{{ route('admin.canned-responses') }}" class="block px-4 py-2 rounded hover:bg-gray-700 {{ request()->routeIs('admin.canned-responses') ? 'bg-gray-700' : '' }}">
+                            Canned Responses
+                        </a>
+                        <a href="{{ route('admin.notifications') }}" class="block px-4 py-2 rounded hover:bg-gray-700 {{ request()->routeIs('admin.notifications') ? 'bg-gray-700' : '' }}">
+                            Notifikasi
+                        </a>
+                        <a href="{{ route('admin.profile') }}" class="block px-4 py-2 rounded hover:bg-gray-700 {{ request()->routeIs('admin.profile') ? 'bg-gray-700' : '' }}">
+                            Profil
+                        </a>
+
+                    @else
+                        <!-- Sidebar untuk User -->
+                        <a href="{{ route('user.dashboard') }}" class="block px-4 py-2 rounded hover:bg-gray-700 {{ request()->routeIs('user.dashboard') ? 'bg-gray-700' : '' }}">
+                            Dashboard
+                        </a>
+                        <a href="{{ route('user.tickets.index') }}" class="block px-4 py-2 rounded hover:bg-gray-700 {{ request()->routeIs('user.tickets.*') ? 'bg-gray-700' : '' }}">
+                            Daftar Tiket
+                        </a>
+                        <a href="{{ route('user.profile') }}" class="block px-4 py-2 rounded hover:bg-gray-700 {{ request()->routeIs('user.profile') ? 'bg-gray-700' : '' }}">
+                            Profil
+                        </a>
+                    @endif
+
+                    <!-- Logout -->
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <button type="submit" class="w-full text-left px-4 py-2 rounded hover:bg-red-600">

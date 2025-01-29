@@ -10,8 +10,8 @@ class Ticket extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 'system', 'sub_system', 'wo_type', 'scope',
-        'description', 'request_date', 'organization', 'requester', 'status'
+        'user_id', 'assigned_to', 'system', 'sub_system', 'wo_type',
+        'scope', 'description', 'request_date', 'organization', 'requester', 'status'
     ];
 
     protected $casts = [
@@ -23,15 +23,16 @@ class Ticket extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function category()
-    {
-    return $this->belongsTo(Category::class, 'category_id');
-    }
 
     public function setStatusAttribute($value)
     {
     $allowedStatuses = ['Open', 'In Progress', 'Closed'];
     $this->attributes['status'] = in_array($value, $allowedStatuses) ? $value : 'Open';
+    }
+
+    public function assignedStaff()
+    {
+    return $this->belongsTo(User::class, 'assigned_to');
     }
 
 }

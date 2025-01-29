@@ -8,15 +8,16 @@ return new class extends Migration {
     public function up()
     {
         Schema::table('tickets', function (Blueprint $table) {
-            $table->foreignId('category_id')->nullable()->constrained('categories')->nullOnDelete();
+            $table->unsignedBigInteger('assigned_to')->nullable()->after('user_id'); // Menyimpan ID IT Staff yang menangani tiket
+            $table->foreign('assigned_to')->references('id')->on('users')->onDelete('set null');
         });
     }
 
     public function down()
     {
         Schema::table('tickets', function (Blueprint $table) {
-            $table->dropForeign(['category_id']);
-            $table->dropColumn('category_id');
+            $table->dropForeign(['assigned_to']);
+            $table->dropColumn('assigned_to');
         });
     }
 };
