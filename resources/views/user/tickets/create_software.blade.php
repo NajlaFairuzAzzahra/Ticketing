@@ -5,7 +5,7 @@
     <h1 class="text-2xl font-bold mb-4">IT S/W Work Order Request Form</h1>
 
     <div class="bg-white p-6 rounded-lg shadow-lg">
-        <form method="POST" action="{{ route('user.tickets.store') }}" class="space-y-4">
+        <form method="POST" action="{{ route('user.tickets.store') }}" class="space-y-4" id="ticketForm">
             @csrf
 
             <!-- Requester Information -->
@@ -75,7 +75,7 @@
 
             <!-- Buttons -->
             <div class="flex space-x-4">
-                <button type="submit" class="w-1/2 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">
+                <button type="button" class="w-1/2 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700" id="openModal">
                     Submit
                 </button>
                 <button type="reset" class="w-1/2 bg-gray-400 text-white py-2 rounded-lg hover:bg-gray-500">
@@ -83,6 +83,17 @@
                 </button>
             </div>
         </form>
+        <!-- 🔥 Popup Modal -->
+<div id="confirmModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden flex items-center justify-center">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-1/3 text-center">
+        <h2 class="text-xl font-bold mb-4">Konfirmasi Pengiriman</h2>
+        <p>Apakah Anda yakin ingin mengirim tiket ini?</p>
+        <div class="mt-6 flex justify-center space-x-4">
+            <button id="confirmSubmit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">Ya, Kirim</button>
+            <button id="closeModal" class="bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-500">Batal</button>
+        </div>
+    </div>
+</div>
     </div>
 </div>
 
@@ -119,5 +130,25 @@
             });
         }
     }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Tombol untuk membuka modal
+        document.getElementById('openModal').addEventListener('click', function() {
+            console.log("Tombol Submit ditekan!"); // 🔥 Debugging
+            document.getElementById('confirmModal').classList.remove('hidden');
+        });
+
+        // Tombol untuk menutup modal tanpa mengirim form
+        document.getElementById('closeModal').addEventListener('click', function() {
+            console.log("Popup ditutup!");
+            document.getElementById('confirmModal').classList.add('hidden');
+        });
+
+        // Tombol untuk mengirim form
+        document.getElementById('confirmSubmit').addEventListener('click', function() {
+            console.log("Tiket dikirim!");
+            document.getElementById('ticketForm').submit(); // 🔥 Kirim form
+        });
+    });
 </script>
 @endsection
