@@ -25,9 +25,37 @@ class TicketController extends Controller
     // Menyimpan tiket baru
     public function store(Request $request)
     {
-        // \Log::info('Data Tiket Diterima:', $request->all()); // Cek apakah data form terkirim dengan benar
+        // \Log::info('Data Tiket Diterima:', $request->all()); // 🔍 Debug log
 
-        // ✅ Pastikan validasi sesuai dengan kolom di database
+        // ✅ Cek apakah tiket yang dikirim adalah hardware atau software
+        if ($request->ticket_type === 'hardware') {
+            $validated = $request->validate([
+                'infrastructure' => 'required|string',
+                'hardware' => 'required|string',
+                'wo_type' => 'required|string',
+                'description' => 'required|string',
+                'request_date' => 'required|date',
+                'organization' => 'required|string',
+                'requester' => 'required|string',
+            ]);
+
+            Ticket::create([
+                'user_id' => Auth::id(),
+                'system' => $validated['infrastructure'], // 🔥 Infrastructure disimpan sebagai System
+                'sub_system' => $validated['hardware'], // 🔥 Hardware disimpan sebagai Sub-System
+                'wo_type' => $validated['wo_type'],
+                'scope' => null,
+                'description' => $validated['description'],
+                'request_date' => $validated['request_date'],
+                'organization' => $validated['organization'],
+                'requester' => $validated['requester'],
+                'status' => 'Open',
+            ]);
+
+            return redirect()->route('user.tickets.index')->with('success', 'Tiket Hardware berhasil dibuat.');
+        }
+
+        // ✅ Jika bukan hardware, anggap software
         $validated = $request->validate([
             'system' => 'required|string',
             'sub_system' => 'required|string',
@@ -39,7 +67,6 @@ class TicketController extends Controller
             'requester' => 'required|string',
         ]);
 
-        // ✅ Simpan tiket ke database
         Ticket::create([
             'user_id' => Auth::id(),
             'system' => $validated['system'],
@@ -50,13 +77,12 @@ class TicketController extends Controller
             'request_date' => $validated['request_date'],
             'organization' => $validated['organization'],
             'requester' => $validated['requester'],
-            'status' => 'Open', // Default status
+            'status' => 'Open',
         ]);
 
-        return redirect()->route('user.tickets.index')->with('success', 'Tiket berhasil dibuat.');
+        return redirect()->route('user.tickets.index')->with('success', 'Tiket Software berhasil dibuat.');
     }
-
-    // Menampilkan detail tiket
+        // Menampilkan detail tiket
     public function show(Ticket $ticket)
     {
         if ($ticket->user_id !== Auth::id()) {
@@ -70,5 +96,11 @@ class TicketController extends Controller
     {
     return view('user.tickets.create_software');
     }
+
+    public function createHardware()
+{
+    return view('user.tickets.create_hardware');
+}
+
 
 }

@@ -21,20 +21,27 @@ Route::middleware('auth')->group(function () {
     });
 
     // Rute User
-    Route::middleware('role:User')->prefix('user')->name('user.')->group(function () {
+    Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
         // Dashboard User
         Route::get('/dashboard', [UserDashboardController::class, 'index'])->name('dashboard');
 
         // Manajemen Tiket
         Route::get('/tickets', [TicketController::class, 'index'])->name('tickets.index');
-        Route::get('/tickets/create', [TicketController::class, 'create'])->name('tickets.create');
+        Route::get('/tickets/create', function () {
+            return view('user.tickets.create');
+        })->name('tickets.create');
+
+        Route::get('/tickets/software', [TicketController::class, 'createSoftware'])->name('tickets.software');
+        Route::get('/tickets/hardware', [TicketController::class, 'createHardware'])->name('tickets.hardware'); // ✅ Perbaiki ini
+
         Route::post('/tickets', [TicketController::class, 'store'])->name('tickets.store');
         Route::get('/tickets/{ticket}', [TicketController::class, 'show'])->name('tickets.show');
-        Route::get('/tickets/software', [TicketController::class, 'createSoftware'])->name('tickets.software');
+    });
 
         // Profil User
         Route::get('/profile', function () {
             return view('user.profile');
         })->name('profile');
+        
     });
-});
+

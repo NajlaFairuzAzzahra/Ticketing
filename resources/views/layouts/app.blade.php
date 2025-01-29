@@ -26,7 +26,7 @@
                     <a href="{{ route('user.tickets.index') }}" class="block px-4 py-2 rounded hover:bg-gray-700 {{ request()->routeIs('user.tickets.*') ? 'bg-gray-700' : '' }}">
                         Daftar Tiket
                     </a>
-                    <a href="{{ route('user.profile') }}" class="block px-4 py-2 rounded hover:bg-gray-700 {{ request()->routeIs('user.profile') ? 'bg-gray-700' : '' }}">
+                    <a href="{{ route('profile') }}" class="block px-4 py-2 rounded hover:bg-gray-700 {{ request()->routeIs('profile') ? 'bg-gray-700' : '' }}">
                         Profil
                     </a>
                     <form method="POST" action="{{ route('logout') }}">
