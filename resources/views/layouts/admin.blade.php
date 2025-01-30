@@ -41,7 +41,7 @@
                 <a href="{{ route('admin.clients') }}" class="block px-4 py-2 rounded hover:bg-gray-700 {{ request()->routeIs('admin.clients') ? 'bg-gray-700' : '' }}">
                     Clients
                 </a>
-                <a href="{{ route('admin.tickets') }}" class="block px-4 py-2 rounded hover:bg-gray-700 {{ request()->routeIs('admin.tickets') ? 'bg-gray-700' : '' }}">
+                <a href="{{ route('admin.tickets.index') }}" class="block px-4 py-2 rounded hover:bg-gray-700 {{ request()->routeIs('admin.tickets') ? 'bg-gray-700' : '' }}">
                     Tickets
                 </a>
                 <a href="{{ route('admin.notifications') }}" class="block px-4 py-2 rounded hover:bg-gray-700 {{ request()->routeIs('admin.notifications') ? 'bg-gray-700' : '' }}">

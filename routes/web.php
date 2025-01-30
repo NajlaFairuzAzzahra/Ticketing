@@ -39,15 +39,20 @@ Route::middleware(['auth', 'role:Admin'])->prefix('admin')->name('admin.')->grou
     // ✅ Rute Manajemen Pengguna
     Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
     Route::get('/users/create', [AdminUserController::class, 'create'])->name('users.create');
-    Route::post('/users', [AdminUserController::class, 'store'])->name('users.store'); // <-- PENTING
+    Route::post('/users', [AdminUserController::class, 'store'])->name('users.store');
     Route::get('/users/{user}/edit', [AdminUserController::class, 'edit'])->name('users.edit');
     Route::put('/users/{user}', [AdminUserController::class, 'update'])->name('users.update');
     Route::delete('/users/{user}', [AdminUserController::class, 'destroy'])->name('users.destroy');
 
-    // ✅ Pastikan tidak ada duplikat di bawah sini
+    // ✅ Rute Manajemen Tiket
+    Route::get('/tickets', [AdminTicketController::class, 'index'])->name('tickets.index');
+    Route::get('/tickets/{ticket}/edit', [AdminTicketController::class, 'edit'])->name('tickets.edit');
+    Route::put('/tickets/{ticket}', [AdminTicketController::class, 'update'])->name('tickets.update');
+    Route::delete('/tickets/{ticket}', [AdminTicketController::class, 'destroy'])->name('tickets.destroy');
+
+    // ✅ Rute Lainnya
     Route::get('/departments', [AdminDepartmentController::class, 'index'])->name('departments');
     Route::get('/clients', [AdminClientController::class, 'index'])->name('clients');
-    Route::get('/tickets', [AdminTicketController::class, 'index'])->name('tickets');
     Route::get('/notifications', function () { return view('admin.notifications'); })->name('notifications');
 });
 

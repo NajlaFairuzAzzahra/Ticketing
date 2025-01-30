@@ -23,7 +23,6 @@ class Ticket extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
-
     public function setStatusAttribute($value)
     {
     $allowedStatuses = ['Open', 'In Progress', 'Closed'];
@@ -32,7 +31,9 @@ class Ticket extends Model
 
     public function assignedStaff()
     {
-    return $this->belongsTo(User::class, 'assigned_to');
+        return $this->belongsTo(User::class, 'assigned_to')->withDefault([
+            'name' => 'Not Assigned'
+        ]);
     }
 
 }
