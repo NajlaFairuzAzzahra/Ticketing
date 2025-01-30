@@ -44,7 +44,7 @@
 
 <!-- Grafik Klien -->
 <div class="bg-white p-6 rounded-lg shadow mt-6">
-    <h2 class="text-lg font-semibold mb-3">Jumlah Klien yang Mengajukan Tiket</h2>
+    <h2 class="text-lg font-semibold mb-3">Jumlah User yang Mengajukan Tiket</h2>
     <p class="text-4xl font-bold text-center">{{ $totalClients }}</p>
 </div>
 

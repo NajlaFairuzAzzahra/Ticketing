@@ -14,7 +14,7 @@ class CreateRolesTable extends Migration
             $table->timestamps();
         });
     }
-
+    
     public function down()
     {
         Schema::dropIfExists('roles');

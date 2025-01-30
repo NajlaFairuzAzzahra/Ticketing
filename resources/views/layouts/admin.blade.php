@@ -32,7 +32,7 @@
                 <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 rounded hover:bg-gray-700 {{ request()->routeIs('admin.dashboard') ? 'bg-gray-700' : '' }}">
                     Dashboard
                 </a>
-                <a href="{{ route('admin.users') }}" class="block px-4 py-2 rounded hover:bg-gray-700 {{ request()->routeIs('admin.users') ? 'bg-gray-700' : '' }}">
+                <a href="{{ route('admin.users.index') }}" class="block px-4 py-2 rounded hover:bg-gray-700 {{ request()->routeIs('admin.users.index') ? 'bg-gray-700' : '' }}">
                     User Management
                 </a>
                 <a href="{{ route('admin.departments') }}" class="block px-4 py-2 rounded hover:bg-gray-700 {{ request()->routeIs('admin.departments') ? 'bg-gray-700' : '' }}">
