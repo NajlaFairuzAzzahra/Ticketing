@@ -4,52 +4,43 @@
 <div class="container mx-auto p-6">
     <h1 class="text-2xl font-bold mb-6">Dashboard IT Staff</h1>
 
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Total Tiket -->
         <div class="bg-blue-500 text-white p-6 rounded-lg shadow">
-            <h2 class="text-lg font-semibold">Total Assigned Tickets</h2>
-            <p class="text-4xl font-bold mt-2">{{ $stats['total_assigned'] }}</p>
+            <h2 class="text-lg font-semibold">Total Tiket</h2>
+            <p class="text-4xl font-bold mt-2">{{ $stats['total_tickets'] ?? 0 }}</p>
         </div>
-        <div class="bg-green-500 text-white p-6 rounded-lg shadow">
-            <h2 class="text-lg font-semibold">Open Tickets</h2>
-            <p class="text-4xl font-bold mt-2">{{ $stats['open_tickets'] }}</p>
-        </div>
+
+        <!-- Tiket Open -->
         <div class="bg-yellow-500 text-white p-6 rounded-lg shadow">
-            <h2 class="text-lg font-semibold">In Progress</h2>
-            <p class="text-4xl font-bold mt-2">{{ $stats['in_progress_tickets'] }}</p>
+            <h2 class="text-lg font-semibold">Tiket Open</h2>
+            <p class="text-4xl font-bold mt-2">{{ $stats['open_tickets'] ?? 0 }}</p>
         </div>
+
+        <!-- Tiket In Progress -->
+        <div class="bg-orange-500 text-white p-6 rounded-lg shadow">
+            <h2 class="text-lg font-semibold">Tiket In Progress</h2>
+            <p class="text-4xl font-bold mt-2">{{ $stats['in_progress_tickets'] ?? 0 }}</p>
+        </div>
+
+        <!-- Tiket Resolved -->
+        <div class="bg-green-500 text-white p-6 rounded-lg shadow">
+            <h2 class="text-lg font-semibold">Tiket Resolved</h2>
+            <p class="text-4xl font-bold mt-2">{{ $stats['resolved_tickets'] ?? 0 }}</p>
+        </div>
+
+        <!-- Tiket Closed -->
         <div class="bg-gray-500 text-white p-6 rounded-lg shadow">
-            <h2 class="text-lg font-semibold">Closed Tickets</h2>
-            <p class="text-4xl font-bold mt-2">{{ $stats['closed_tickets'] }}</p>
+            <h2 class="text-lg font-semibold">Tiket Closed</h2>
+            <p class="text-4xl font-bold mt-2">{{ $stats['closed_tickets'] ?? 0 }}</p>
         </div>
     </div>
 
-    <h2 class="text-xl font-bold mt-8 mb-4">Assigned Tickets</h2>
-    <div class="bg-white shadow-md rounded-lg overflow-hidden">
-        <table class="w-full text-left border-collapse">
-            <thead class="bg-gray-200">
-                <tr>
-                    <th class="p-3 border">ID</th>
-                    <th class="p-3 border">User</th>
-                    <th class="p-3 border">Deskripsi</th>
-                    <th class="p-3 border">Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($assignedTickets as $ticket)
-                <tr class="border-b">
-                    <td class="p-3 border">{{ $ticket->id }}</td>
-                    <td class="p-3 border">{{ optional($ticket->user)->name ?? 'Unknown' }}</td>
-                    <td class="p-3 border">{{ $ticket->description }}</td>
-                    <td class="p-3 border">
-                        <span class="px-2 py-1 rounded text-white
-                        {{ $ticket->status == 'Open' ? 'bg-green-500' : ($ticket->status == 'In Progress' ? 'bg-yellow-500' : ($ticket->status == 'Resolved' ? 'bg-blue-500' : 'bg-gray-500')) }}">
-                            {{ $ticket->status }}
-                        </span>
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
+    <!-- Button untuk melihat semua tiket -->
+    <div class="mt-6">
+        <a href="{{ route('staff.tickets.index') }}" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
+            Lihat Semua Tiket
+            </a>
     </div>
 </div>
 @endsection

@@ -9,24 +9,20 @@ use Symfony\Component\HttpFoundation\Response;
 
 class RoleMiddleware
 {
-    public function handle(Request $request, Closure $next, string $role): Response
+    public function handle(Request $request, Closure $next, string $role)
     {
         if (!Auth::check()) {
-            return redirect('/login'); // 🔥 Redirect ke login jika belum login
+            return redirect('/login');
         }
 
-        if (Auth::user()->role_id == 1 && $role === 'Admin') {
-            return $next($request);
+        $user = Auth::user();
+
+        if (($role === 'Admin' && $user->role_id != 1) ||
+            ($role === 'Staff' && $user->role_id != 2) ||
+            ($role === 'User' && $user->role_id != 3)) {
+            return redirect()->route('home')->with('error', 'Unauthorized access!');
         }
 
-        if (Auth::user()->role_id == 2 && $role === 'Staff') {
-            return $next($request);
-        }
-
-        if (Auth::user()->role_id == 3 && $role === 'User') {
-            return $next($request);
-        }
-
-        return redirect('/dashboard')->with('error', 'Akses ditolak.');
+        return $next($request);
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -24,14 +25,14 @@ class AuthenticatedSessionController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            // ✅ Redirect berdasarkan role
+            // ✅ Perbaiki redirect berdasarkan role
             $user = Auth::user();
-            if ($user->role->name === 'Admin') {
+            if ($user->role_id == 1) {
                 return redirect()->route('admin.dashboard');
-            } elseif ($user->role->name === 'Staff') { // 🔥 Tambahkan ini
-                return redirect()->route('staff.dashboard'); // 🔥 Pastikan route ini ada!
+            } elseif ($user->role_id == 2) {
+                return redirect()->route('staff.dashboard');
             } else {
-                return redirect()->route('user.dashboard');
+                return redirect()->route('user.dashboard'); // User biasa
             }
         }
 
@@ -39,6 +40,7 @@ class AuthenticatedSessionController extends Controller
             'email' => 'The provided credentials do not match our records.',
         ]);
     }
+
 
     public function destroy(Request $request)
     {

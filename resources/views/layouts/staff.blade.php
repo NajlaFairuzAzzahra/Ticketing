@@ -4,25 +4,25 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
-    <title>IT Staff Panel</title>
-
-    <!-- Tailwind CSS -->
+    <title>{{ config('app.name', 'Laravel IT Staff') }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Fonts -->
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 </head>
 <body class="bg-gray-100 font-sans">
     <div class="min-h-screen flex">
         <!-- Sidebar -->
         <aside class="w-64 bg-gray-800 text-white p-6">
             <h1 class="text-xl font-bold mb-6">IT Staff Panel</h1>
+
             <nav class="space-y-4">
                 <a href="{{ route('staff.dashboard') }}" class="block px-4 py-2 rounded hover:bg-gray-700 {{ request()->routeIs('staff.dashboard') ? 'bg-gray-700' : '' }}">
                     Dashboard
                 </a>
+                <a href="{{ route('staff.tickets.index') }}" class="block px-4 py-2 rounded hover:bg-gray-700 {{ request()->routeIs('staff.tickets.index') ? 'bg-gray-700' : '' }}">
+                    Tiket
+                </a>
             </nav>
+
+            <!-- Logout -->
             <div class="mt-auto p-4">
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
