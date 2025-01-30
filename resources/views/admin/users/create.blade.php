@@ -9,24 +9,24 @@
 
         <label class="block">
             Nama
-            <input type="text" name="name" class="w-full p-2 border rounded-lg">
+            <input type="text" name="name" class="w-full p-2 border rounded-lg" required>
         </label>
 
         <label class="block">
             Email
-            <input type="email" name="email" class="w-full p-2 border rounded-lg">
+            <input type="email" name="email" class="w-full p-2 border rounded-lg" required>
         </label>
 
         <label class="block">
             Password
-            <input type="password" name="password" class="w-full p-2 border rounded-lg">
+            <input type="password" name="password" class="w-full p-2 border rounded-lg" required>
         </label>
 
         <label class="block">
             Role
-            <select name="role_id" class="w-full p-2 border rounded-lg">
+            <select name="role_id" class="w-full p-2 border rounded-lg" required>
                 <option value="1">Admin</option>
-                <option value="2">Staff</option>
+                <option value="2">IT Staff</option>
                 <option value="3">User</option>
             </select>
         </label>
