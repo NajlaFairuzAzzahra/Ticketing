@@ -15,13 +15,18 @@ use Illuminate\Support\Facades\Log;
 
 Route::get('/', function () {
     if (!Auth::check()) {
-        return redirect('/login'); // Jika belum login
+        return redirect('/login');
     }
 
-    return Auth::user()->role_id == 1
-        ? redirect()->route('admin.dashboard') // Jika admin
-        : redirect()->route('user.dashboard'); // Jika user/staff
+    if (Auth::user()->role_id == 1) {
+        return redirect()->route('admin.dashboard'); // Admin
+    } elseif (Auth::user()->role_id == 2) {
+        return redirect()->route('staff.dashboard'); // IT Staff
+    } else {
+        return redirect()->route('user.dashboard'); // User
+    }
 })->name('home');
+
 
 
 // Rute Autentikasi Laravel Breeze
@@ -50,6 +55,12 @@ Route::middleware(['auth', 'role:Admin'])->prefix('admin')->name('admin.')->grou
 // ✅ Rute User
 Route::middleware(['auth', 'role:User'])->prefix('user')->name('user.')->group(function () {
     Route::get('/dashboard', [UserDashboardController::class, 'index'])->name('dashboard');
+
+    // ✅ Tambahkan route profile
+    Route::get('/profile', function () {
+        return view('user.profile');
+    })->name('profile');
+
     Route::get('/tickets', [TicketController::class, 'index'])->name('tickets.index');
     Route::get('/tickets/create', function () {
         return view('user.tickets.create');
@@ -58,7 +69,5 @@ Route::middleware(['auth', 'role:User'])->prefix('user')->name('user.')->group(f
     Route::get('/tickets/hardware', [TicketController::class, 'createHardware'])->name('tickets.hardware');
     Route::post('/tickets', [TicketController::class, 'store'])->name('tickets.store');
     Route::get('/tickets/{ticket}', [TicketController::class, 'show'])->name('tickets.show');
-    Route::get('/profile', function () {
-        return view('user.profile');
-    })->name('profile');
 });
+
