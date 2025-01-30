@@ -28,7 +28,6 @@ Route::get('/', function () {
 })->name('home');
 
 
-
 // Rute Autentikasi Laravel Breeze
 require __DIR__.'/auth.php';
 
@@ -46,6 +45,8 @@ Route::middleware(['auth', 'role:Admin'])->prefix('admin')->name('admin.')->grou
 
     // ✅ Rute Manajemen Tiket
     Route::get('/tickets', [AdminTicketController::class, 'index'])->name('tickets.index');
+    Route::get('/tickets/create', [AdminTicketController::class, 'create'])->name('tickets.create'); // Tambahkan jika perlu
+    Route::post('/tickets', [AdminTicketController::class, 'store'])->name('tickets.store'); // Tambahkan jika perlu
     Route::get('/tickets/{ticket}/edit', [AdminTicketController::class, 'edit'])->name('tickets.edit');
     Route::put('/tickets/{ticket}', [AdminTicketController::class, 'update'])->name('tickets.update');
     Route::delete('/tickets/{ticket}', [AdminTicketController::class, 'destroy'])->name('tickets.destroy');
@@ -76,3 +77,8 @@ Route::middleware(['auth', 'role:User'])->prefix('user')->name('user.')->group(f
     Route::get('/tickets/{ticket}', [TicketController::class, 'show'])->name('tickets.show');
 });
 
+
+// ✅ Rute IT Staff
+Route::middleware(['auth', 'role:Staff'])->prefix('staff')->name('staff.')->group(function () {
+    Route::get('/dashboard', [\App\Http\Controllers\Staff\DashboardController::class, 'index'])->name('dashboard');
+});

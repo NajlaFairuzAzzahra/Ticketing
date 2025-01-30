@@ -24,13 +24,15 @@ class AuthenticatedSessionController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-        // Redirect berdasarkan role
-        $user = Auth::user();
-        if ($user->role->name === 'Admin') {
-            return redirect()->route('admin.dashboard');
-        }
-
-        return redirect()->route('user.dashboard');
+            // ✅ Redirect berdasarkan role
+            $user = Auth::user();
+            if ($user->role->name === 'Admin') {
+                return redirect()->route('admin.dashboard');
+            } elseif ($user->role->name === 'Staff') { // 🔥 Tambahkan ini
+                return redirect()->route('staff.dashboard'); // 🔥 Pastikan route ini ada!
+            } else {
+                return redirect()->route('user.dashboard');
+            }
         }
 
         return back()->withErrors([

@@ -86,7 +86,7 @@
                     <td class="p-3 border">{{ $ticket->status }}</td>
                     <td class="p-3 border">{{ $ticket->created_at->format('d M Y') }}</td>
                     <td class="p-3 border">
-                        <a href="{{ route('admin.tickets') }}" class="text-blue-600 hover:underline">Lihat</a>
+                        <a href="{{ route('admin.tickets.index') }}" class="text-blue-600 hover:underline">Lihat</a>
                     </td>
                 </tr>
                 @endforeach
