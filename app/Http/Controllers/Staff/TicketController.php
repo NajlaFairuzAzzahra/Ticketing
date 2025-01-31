@@ -33,6 +33,8 @@ class TicketController extends Controller
     // ✅ Menampilkan detail tiket
     public function show(Ticket $ticket)
     {
+        $ticket->load('comments.user'); // 🔥 Pastikan komentar dan pengguna ikut dimuat
+
         return view('staff.tickets.show', [
             'ticket' => $ticket,
             'staffs' => User::where('role_id', 2)->get(), // Ambil semua staff
@@ -44,13 +46,23 @@ class TicketController extends Controller
     {
         $request->validate([
             'status' => 'required|in:Open,In Progress,Resolved,Closed',
+            'comment' => 'nullable|string|max:1000'
         ]);
 
-        $ticket->update([
-            'status' => $request->status,
-        ]);
+        // 🔹 Update Status Tiket
+        $ticket->update(['status' => $request->status]);
 
-        return redirect()->route('staff.tickets.index')->with('success', 'Tiket berhasil diperbarui.');
+        // 🔹 Simpan Komentar Jika Ada
+        if (!empty($request->comment)) {
+            Comment::create([
+                'ticket_id' => $ticket->id,
+                'user_id' => Auth::id(),
+                'content' => $request->comment
+            ]);
+        }
+
+        return redirect()->route('staff.tickets.show', $ticket->id)
+            ->with('success', 'Status tiket diperbarui dan komentar ditambahkan.');
     }
 
     public function assign(Ticket $ticket)
@@ -66,6 +78,39 @@ class TicketController extends Controller
 
         return redirect()->route('staff.tickets.show', $ticket->id)->with('success', 'Tiket berhasil diambil alih.');
     }
+
+    public function claim($id)
+    {
+    $ticket = Ticket::findOrFail($id);
+    $ticket->assigned_to = Auth::id();
+    $ticket->status = 'In Progress';
+    $ticket->save();
+
+    return redirect()->route('staff.tickets.index')->with('success', 'Tiket berhasil diambil alih!');
+    }
+
+    public function comment(Request $request, $id)
+    {
+    $request->validate(['comment' => 'required']);
+    $ticket = Ticket::findOrFail($id);
+
+    $ticket->comments()->create([
+        'user_id' => Auth::id(),
+        'content' => $request->comment,
+    ]);
+
+    return back()->with('success', 'Komentar berhasil ditambahkan!');
+    }
+
+    public function resolve($id)
+    {
+    $ticket = Ticket::findOrFail($id);
+    $ticket->status = 'Resolved';
+    $ticket->save();
+
+    return redirect()->route('staff.tickets.index')->with('success', 'Tiket berhasil diselesaikan!');
+    }
+
 
 
 

@@ -25,8 +25,8 @@ class Ticket extends Model
 
     public function setStatusAttribute($value)
     {
-    $allowedStatuses = ['Open', 'In Progress', 'Closed'];
-    $this->attributes['status'] = in_array($value, $allowedStatuses) ? $value : 'Open';
+        $allowedStatuses = ['Open', 'In Progress', 'Closed', 'Resolved'];
+        $this->attributes['status'] = in_array($value, $allowedStatuses) ? $value : 'Open';
     }
 
     public function assignedStaff()
@@ -35,5 +35,11 @@ class Ticket extends Model
             'name' => 'Not Assigned'
         ]);
     }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class, 'ticket_id'); // Pastikan 'ticket_id' sesuai dengan nama kolom di database
+    }
+
 
 }

@@ -84,14 +84,15 @@ Route::middleware(['auth', 'role:Staff'])->prefix('staff')->name('staff.')->grou
 
     // ✅ CRUD Tiket untuk IT Staff
     Route::get('/tickets', [\App\Http\Controllers\Staff\TicketController::class, 'index'])->name('tickets.index');
-    Route::get('/tickets/{ticket}', [\App\Http\Controllers\Staff\TicketController::class, 'show'])->name('tickets.show'); // 🔥 Detail tiket
-    // Route::put('/tickets/{ticket}/update-status', [\App\Http\Controllers\Staff\TicketController::class, 'updateStatus'])->name('tickets.updateStatus'); // 🔥 Update status tiket
-    // Route::put('/tickets/{ticket}/assign', [\App\Http\Controllers\Staff\TicketController::class, 'assignToSelf'])->name('tickets.assign'); // 🔥 Ambil alih tiket
-    Route::post('/tickets/{ticket}/comment', [\App\Http\Controllers\Staff\TicketController::class, 'addComment'])->name('tickets.comment'); // 🔥 Tambah komentar
-    Route::delete('/tickets/{ticket}', [\App\Http\Controllers\Staff\TicketController::class, 'destroy'])->name('tickets.destroy'); // 🔥 Hapus tiket
+    Route::get('/tickets/{ticket}', [\App\Http\Controllers\Staff\TicketController::class, 'show'])->name('tickets.show');
     Route::get('/tickets/{ticket}/edit', [\App\Http\Controllers\Staff\TicketController::class, 'edit'])->name('tickets.edit');
-    Route::put('/tickets/{ticket}', [\App\Http\Controllers\Staff\TicketController::class, 'update'])->name('tickets.update');
-    Route::get('/tickets/{ticket}', [\App\Http\Controllers\Staff\TicketController::class, 'show'])->name('tickets.show'); // 🔥 Tambahkan ini
-    Route::put('/tickets/{ticket}/assign', [\App\Http\Controllers\Staff\TicketController::class, 'assign'])->name('tickets.assign'); // 🔥 Tambahkan ini
+    Route::put('/tickets/{ticket}', [\App\Http\Controllers\Staff\TicketController::class, 'update'])->name('tickets.update'); // ✅ Rute Update Tiket
 
+    // ✅ Rute Tambahan untuk Staff
+    Route::delete('/tickets/{ticket}', [\App\Http\Controllers\Staff\TicketController::class, 'destroy'])->name('tickets.destroy');
+    Route::put('/tickets/{ticket}/assign', [\App\Http\Controllers\Staff\TicketController::class, 'assign'])->name('tickets.assign');
+    Route::post('/tickets/{ticket}/comment', [\App\Http\Controllers\Staff\TicketController::class, 'comment'])->name('tickets.comment');
+    Route::put('/tickets/{ticket}/resolve', [\App\Http\Controllers\Staff\TicketController::class, 'resolve'])->name('tickets.resolve');
 });
+
+

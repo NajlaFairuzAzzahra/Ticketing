@@ -4,9 +4,11 @@
 <div class="container mx-auto p-6">
     <h1 class="text-2xl font-bold mb-6">Detail Tiket #{{ $ticket->id }}</h1>
 
-    <div class="bg-white p-6 rounded-lg shadow-lg">
+    <!-- 🔹 Informasi Tiket -->
+    <div class="bg-white p-6 rounded-lg shadow-lg mb-6">
+        <h2 class="text-lg font-semibold mb-2">Informasi Tiket</h2>
         <p><strong>User:</strong> {{ optional($ticket->user)->name ?? 'Unknown User' }}</p>
-        <p><strong>Status:</strong> {{ $ticket->status }}</p>
+        <p><strong>Status:</strong> <span class="px-2 py-1 rounded bg-gray-200">{{ $ticket->status }}</span></p>
         <p><strong>Deskripsi:</strong> {{ $ticket->description }}</p>
         <p><strong>Dibuat pada:</strong> {{ $ticket->created_at->format('d M Y, H:i') }}</p>
 
@@ -17,24 +19,25 @@
         @endif
     </div>
 
-    <!-- 🔥 Tampilkan tombol "Ambil Alih" jika tiket belum ditugaskan -->
-    @if(!$ticket->assigned_to)
-    <div class="mt-6">
-        <form method="POST" action="{{ route('staff.tickets.assign', $ticket->id) }}">
-            @csrf @method('PUT')
-            <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
-                Ambil Alih Tiket
+    <!-- 🔥 Tombol Ambil Alih Jika Belum Ditugaskan -->
+    @if(is_null($ticket->assigned_to))
+        <form method="POST" action="{{ route('staff.tickets.claim', $ticket->id) }}" class="mb-6">
+            @csrf
+            <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-700">
+                Ambil Alih
             </button>
         </form>
-    </div>
     @endif
 
-    <!-- 🔥 Update Status Tiket -->
-    <div class="mt-6 bg-white p-6 rounded-lg shadow-lg">
-        <h2 class="text-lg font-bold mb-4">Update Status Tiket</h2>
-        <form method="POST" action="{{ route('staff.tickets.update', $ticket->id) }}">
-            @csrf @method('PUT')
+    <!-- 🔥 Form Komentar & Update Status dalam Satu Form -->
+    <div class="bg-white p-6 rounded-lg shadow-lg mb-6">
+        <h2 class="text-lg font-semibold mb-4">Update Tiket dan Tambahkan Komentar</h2>
 
+        <form method="POST" action="{{ route('staff.tickets.update', $ticket->id) }}">
+            @csrf
+            @method('PUT')
+
+            <!-- Status Update -->
             <label class="block mb-4">
                 <span class="text-gray-700">Status</span>
                 <select name="status" class="w-full p-2 border rounded-lg">
@@ -45,13 +48,35 @@
                 </select>
             </label>
 
+            <!-- Komentar -->
+            <label class="block mb-4">
+                <span class="text-gray-700">Komentar</span>
+                <textarea name="comment" class="w-full p-2 border rounded-lg" placeholder="Tambahkan komentar..."></textarea>
+            </label>
+
             <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-                Update Status
+                Update dan Kirim Komentar
             </button>
         </form>
     </div>
 
-    <a href="{{ route('staff.tickets.index') }}" class="mt-4 inline-block bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-800">
+    <!-- 🔥 List Komentar -->
+    <h2 class="text-xl font-bold mt-6">Komentar</h2>
+
+    @if($ticket->comments->isEmpty())
+        <p class="text-gray-500">Belum ada komentar.</p>
+    @else
+        @foreach($ticket->comments as $comment)
+        <div class="p-4 border rounded-lg bg-gray-100 mt-2">
+            <p class="font-semibold">{{ optional($comment->user)->name ?? 'User Tidak Diketahui' }}:</p>
+            <p>{{ $comment->content }}</p>
+            <p class="text-xs text-gray-500">{{ $comment->created_at->format('d M Y, H:i') }}</p>
+        </div>
+        @endforeach
+    @endif
+
+    <!-- 🔙 Tombol Kembali -->
+    <a href="{{ route('staff.tickets.index') }}" class="block w-full text-center bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-800">
         Kembali ke Daftar Tiket
     </a>
 </div>
