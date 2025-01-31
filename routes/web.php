@@ -75,6 +75,8 @@ Route::middleware(['auth', 'role:User'])->prefix('user')->name('user.')->group(f
     Route::get('/tickets/hardware', [TicketController::class, 'createHardware'])->name('tickets.hardware');
     Route::post('/tickets', [TicketController::class, 'store'])->name('tickets.store');
     Route::get('/tickets/{ticket}', [TicketController::class, 'show'])->name('tickets.show');
+    Route::post('/tickets/{ticket}/comment', [TicketController::class, 'addComment'])->name('tickets.comment');
+
 });
 
 

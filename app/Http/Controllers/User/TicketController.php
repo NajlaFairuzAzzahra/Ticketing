@@ -90,6 +90,29 @@ class TicketController extends Controller
             return view('user.tickets.show', compact('ticket'));
         }
 
+
+        public function addComment(Request $request, Ticket $ticket)
+        {
+            // Cegah user berkomentar di tiket milik user lain
+            if ($ticket->user_id !== Auth::id()) {
+                return redirect()->route('user.tickets.index')->with('error', 'Anda tidak memiliki akses untuk tiket ini.');
+            }
+
+            // Validasi input komentar
+            $request->validate([
+                'comment' => 'required|string|max:1000'
+            ]);
+
+            // Simpan komentar ke database
+            $ticket->comments()->create([
+                'user_id' => Auth::id(),
+                'content' => $request->comment,
+            ]);
+
+            return redirect()->route('user.tickets.show', $ticket->id)->with('success', 'Komentar berhasil ditambahkan.');
+        }
+
+
     public function createSoftware()
     {
     return view('user.tickets.create_software');

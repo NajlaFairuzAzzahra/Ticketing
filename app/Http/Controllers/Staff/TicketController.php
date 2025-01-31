@@ -102,15 +102,21 @@ class TicketController extends Controller
 
     public function comment(Request $request, $id)
     {
-    $request->validate(['comment' => 'required']);
-    $ticket = Ticket::findOrFail($id);
+        $request->validate([
+            'comment' => 'required|string|max:1000',
+            'parent_id' => 'nullable|exists:comments,id'
+        ]);
 
-    $ticket->comments()->create([
-        'user_id' => Auth::id(),
-        'content' => $request->comment,
-    ]);
+        $ticket = Ticket::findOrFail($id);
 
-    return back()->with('success', 'Komentar berhasil ditambahkan!');
+        Comment::create([
+            'ticket_id' => $ticket->id,
+            'user_id' => Auth::id(),
+            'content' => $request->comment,
+            'parent_id' => $request->parent_id
+        ]);
+
+        return back()->with('success', 'Komentar berhasil ditambahkan!');
     }
 
     public function resolve($id)
