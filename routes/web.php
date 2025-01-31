@@ -110,8 +110,8 @@ Route::middleware(['auth', 'role:Staff'])->prefix('staff')->name('staff.')->grou
     Route::put('/tickets/{ticket}/resolve', [\App\Http\Controllers\Staff\TicketController::class, 'resolve'])->name('tickets.resolve');
 });
 
-// ✅ Rute Notifikasi (Berlaku untuk semua role: Admin, Staff, User)
-Route::middleware(['auth'])->group(function () {
+// ✅ Notifikasi berdasarkan role
+    Route::middleware(['auth'])->group(function () {
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
     Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
     Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.readAll');

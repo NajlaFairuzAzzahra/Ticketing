@@ -14,9 +14,13 @@ class NotificationController extends Controller
             return redirect()->route('login');
         }
 
-        $notifications = Auth::user()->unreadNotifications;
+        $user = Auth::user();
+        $notifications = $user->unreadNotifications;
 
-        return view('notifications.index', compact('notifications'));
+        // 🔥 Gunakan role_id untuk menentukan layout yang benar
+        $layout = ($user->role_id == 1) ? 'admin' : (($user->role_id == 2) ? 'staff' : 'user');
+
+        return view('notifications.index', compact('notifications', 'layout'));
     }
 
     public function markAsRead($id)
