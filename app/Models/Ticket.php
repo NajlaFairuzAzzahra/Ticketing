@@ -11,7 +11,8 @@ class Ticket extends Model
 
     protected $fillable = [
         'user_id', 'assigned_to', 'system', 'sub_system', 'wo_type',
-        'scope', 'description', 'request_date', 'organization', 'requester', 'status'
+        'scope', 'description', 'request_date', 'organization', 'requester',
+        'status', 'attachment', 'link'
     ];
 
     protected $casts = [

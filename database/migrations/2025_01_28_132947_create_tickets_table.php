@@ -21,6 +21,7 @@ class CreateTicketsTable extends Migration
             $table->string('requester');
             $table->string('status')->default('Open');
             $table->timestamps();
+
         });
     }
 

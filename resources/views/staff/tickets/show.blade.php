@@ -17,7 +17,28 @@
         @else
             <p><strong>Assigned To:</strong> <span class="text-red-500">Belum ditugaskan</span></p>
         @endif
+
+        @if ($ticket->attachment)
+        <p><strong>Lampiran:</strong>
+            <a href="{{ asset('storage/' . $ticket->attachment) }}" target="_blank" class="text-blue-600 underline">
+                Download Attachment
+            </a>
+        </p>
+    @else
+        <p><strong>Lampiran:</strong> Tidak ada</p>
+    @endif
+
+    @if ($ticket->link)
+        <p><strong>Link Referensi:</strong>
+            <a href="{{ $ticket->link }}" target="_blank" class="text-blue-600 underline">
+                {{ $ticket->link }}
+            </a>
+        </p>
+    @endif
+
     </div>
+
+
 
     <!-- 🔥 Tombol Ambil Alih Jika Belum Ditugaskan -->
     @if(is_null($ticket->assigned_to))
@@ -47,6 +68,8 @@
                     <option value="Closed" {{ $ticket->status == 'Closed' ? 'selected' : '' }}>Closed</option>
                 </select>
             </label>
+
+
 
             <!-- Komentar -->
             <label class="block mb-4">

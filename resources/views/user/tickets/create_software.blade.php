@@ -5,7 +5,7 @@
     <h1 class="text-2xl font-bold mb-4">IT S/W Work Order Request Form</h1>
 
     <div class="bg-white p-6 rounded-lg shadow-lg">
-        <form method="POST" action="{{ route('user.tickets.store') }}" class="space-y-4" id="ticketForm">
+        <form method="POST" action="{{ route('user.tickets.store') }}" enctype="multipart/form-data" class="space-y-4" id="ticketForm">
             @csrf
 
             <!-- Requester Information -->
@@ -72,6 +72,19 @@
                 <label class="block font-medium text-gray-700">Detail Description *</label>
                 <textarea name="description" class="w-full p-2 border border-gray-300 rounded-lg h-32"></textarea>
             </div>
+
+            <!-- Input File -->
+            <div>
+                <label class="block font-medium text-gray-700">Lampiran (Optional)</label>
+                <input type="file" name="attachment" class="w-full p-2 border border-gray-300 rounded-lg">
+            </div>
+
+            <!-- Input Link -->
+            <div>
+                <label class="block font-medium text-gray-700">Link (Optional)</label>
+                <input type="url" name="link" class="w-full p-2 border border-gray-300 rounded-lg">
+            </div>
+
 
             <!-- Buttons -->
             <div class="flex space-x-4">

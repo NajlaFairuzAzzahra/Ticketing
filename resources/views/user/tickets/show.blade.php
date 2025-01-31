@@ -12,6 +12,26 @@
         <p><strong>Dibuat pada:</strong> {{ $ticket->created_at->format('d M Y, H:i') }}</p>
     </div>
 
+            <!-- 🔥 Menampilkan Lampiran (jika ada) -->
+            @if ($ticket->attachment)
+            <p><strong>Lampiran:</strong>
+                <a href="{{ asset('storage/' . $ticket->attachment) }}" target="_blank" class="text-blue-600 underline">
+                    Download Attachment
+                </a>
+            </p>
+        @else
+            <p><strong>Lampiran:</strong> Tidak ada</p>
+        @endif
+
+        @if ($ticket->link)
+            <p><strong>Link Referensi:</strong>
+                <a href="{{ $ticket->link }}" target="_blank" class="text-blue-600 underline">
+                    {{ $ticket->link }}
+                </a>
+            </p>
+        @endif
+    </div>
+
 
     <h2 class="text-xl font-bold mt-6">Komentar</h2>
 
