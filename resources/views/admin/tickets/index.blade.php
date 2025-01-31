@@ -28,11 +28,29 @@
                         </span>
                     </td>
                     <td class="p-3 border flex space-x-2">
-                        <a href="{{ route('admin.tickets.edit', $ticket->id) }}" class="bg-yellow-500 text-white px-4 py-2 rounded">Edit</a>
-                        <form method="POST" action="{{ route('admin.tickets.destroy', $ticket->id) }}">
-                            @csrf @method('DELETE')
-                            <button type="submit" class="text-red-600" onclick="return confirm('Yakin ingin menghapus?')">Hapus</button>
-                        </form>
+                        <a href="{{ route('admin.tickets.edit', $ticket->id) }}" class="bg-yellow-500 text-white px-4 py-2 rounded">
+                            Edit
+                        </a>
+
+                        <!-- 🔥 Tombol untuk membuka modal hapus -->
+                        <button onclick="openModal({{ $ticket->id }})" class="bg-red-600 text-white px-4 py-2 rounded">
+                            Hapus
+                        </button>
+
+                        <!-- 🔥 Modal Konfirmasi -->
+                        <div id="confirmModal-{{ $ticket->id }}" class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden flex items-center justify-center">
+                            <div class="bg-white p-6 rounded-lg shadow-lg w-1/3 text-center">
+                                <h2 class="text-xl font-bold mb-4">Konfirmasi Hapus</h2>
+                                <p>Apakah Anda yakin ingin menghapus tiket ini?</p>
+                                <div class="mt-6 flex justify-center space-x-4">
+                                    <form method="POST" action="{{ route('admin.tickets.destroy', $ticket->id) }}">
+                                        @csrf @method('DELETE')
+                                        <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700">Ya, Hapus</button>
+                                    </form>
+                                    <button onclick="closeModal({{ $ticket->id }})" class="bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-500">Batal</button>
+                                </div>
+                            </div>
+                        </div>
                     </td>
                 </tr>
                 @endforeach
@@ -40,4 +58,15 @@
         </table>
     </div>
 </div>
+
+<!-- 🔥 Script untuk Modal -->
+<script>
+    function openModal(ticketId) {
+        document.getElementById('confirmModal-' + ticketId).classList.remove('hidden');
+    }
+
+    function closeModal(ticketId) {
+        document.getElementById('confirmModal-' + ticketId).classList.add('hidden');
+    }
+</script>
 @endsection
