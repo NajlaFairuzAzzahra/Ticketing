@@ -172,8 +172,8 @@ class TicketController extends Controller
     // ✅ Menghapus tiket
     public function destroy(Ticket $ticket)
     {
-        $ticket->delete();
+        $tickets = Ticket::whereNull('deleted_at')->get();
+        return view('admin.tickets.index', compact('tickets'));
 
-        return redirect()->route('staff.tickets.index')->with('success', 'Tiket berhasil dihapus.');
     }
 }

@@ -63,7 +63,7 @@ class AdminUserController extends Controller
 
     public function destroy(User $user)
     {
-        $user->delete();
-        return redirect()->route('admin.users.index')->with('success', 'User berhasil dihapus.');
+        $user->delete(); // Soft delete, bukan hard delete
+        return redirect()->route('admin.users.index')->with('success', 'User berhasil dinonaktifkan.');
     }
 }

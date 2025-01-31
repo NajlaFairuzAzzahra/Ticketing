@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Ticket extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'user_id', 'assigned_to', 'system', 'sub_system', 'wo_type',
@@ -18,6 +19,8 @@ class Ticket extends Model
     protected $casts = [
         'status' => 'string',
     ];
+
+    protected $dates = ['deleted_at'];
 
     public function user()
     {

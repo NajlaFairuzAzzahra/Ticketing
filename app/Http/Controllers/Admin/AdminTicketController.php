@@ -45,7 +45,7 @@ class AdminTicketController extends Controller
 
     public function destroy(Ticket $ticket)
     {
-        $ticket->delete();
+        $ticket->delete(); // Soft delete
         return redirect()->route('admin.tickets.index')->with('success', 'Tiket berhasil dihapus.');
     }
 }
