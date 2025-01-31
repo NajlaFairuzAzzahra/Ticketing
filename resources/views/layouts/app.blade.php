@@ -22,12 +22,12 @@
                 <h1 class="text-xl font-bold mb-6">Helpdesk</h1>
 
                 <nav class="space-y-4">
-                    @if(Auth::user()->role->name == 'Admin')
+                    @if(Auth::check() && Auth::user()->role->name == 'Admin')
                         <!-- Sidebar untuk Admin -->
                         <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 rounded hover:bg-gray-700 {{ request()->routeIs('admin.dashboard') ? 'bg-gray-700' : '' }}">
                             Dashboard Admin
                         </a>
-                        <a href="{{ route('admin.tickets') }}" class="block px-4 py-2 rounded hover:bg-gray-700 {{ request()->routeIs('admin.tickets') ? 'bg-gray-700' : '' }}">
+                        <a href="{{ route('admin.tickets.index') }}" class="block px-4 py-2 rounded hover:bg-gray-700 {{ request()->routeIs('admin.tickets.*') ? 'bg-gray-700' : '' }}">
                             Kelola Tiket
                         </a>
                         <a href="{{ route('admin.canned-responses') }}" class="block px-4 py-2 rounded hover:bg-gray-700 {{ request()->routeIs('admin.canned-responses') ? 'bg-gray-700' : '' }}">
@@ -39,8 +39,7 @@
                         <a href="{{ route('admin.profile') }}" class="block px-4 py-2 rounded hover:bg-gray-700 {{ request()->routeIs('admin.profile') ? 'bg-gray-700' : '' }}">
                             Profil
                         </a>
-
-                    @else
+                    @elseif(Auth::check())
                         <!-- Sidebar untuk User -->
                         <a href="{{ route('user.dashboard') }}" class="block px-4 py-2 rounded hover:bg-gray-700 {{ request()->routeIs('user.dashboard') ? 'bg-gray-700' : '' }}">
                             Dashboard
@@ -54,12 +53,14 @@
                     @endif
 
                     <!-- Logout -->
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <button type="submit" class="w-full text-left px-4 py-2 rounded hover:bg-red-600">
-                            Logout
-                        </button>
-                    </form>
+                    @if(Auth::check())
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="w-full text-left px-4 py-2 rounded hover:bg-red-600">
+                                Logout
+                            </button>
+                        </form>
+                    @endif
                 </nav>
             </aside>
 

@@ -8,6 +8,7 @@ use App\Models\Ticket;
 use App\Models\Comment;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
 
 class TicketController extends Controller
 {
@@ -23,6 +24,7 @@ class TicketController extends Controller
         {
             if (!$ticket->assigned_to) {
                 // Jika tiket belum ditugaskan, biarkan IT Staff mengambil alih
+
                 $ticket->update(['assigned_to' => Auth::id()]);
             }
 
@@ -44,16 +46,24 @@ class TicketController extends Controller
 
     public function update(Request $request, Ticket $ticket)
     {
+        if (!$ticket) {
+            return redirect()->route('staff.tickets.index')->with('error', 'Tiket tidak ditemukan.');
+        }
+
         $request->validate([
             'status' => 'required|in:Open,In Progress,Resolved,Closed',
             'comment' => 'nullable|string|max:1000'
         ]);
 
-        // 🔹 Update Status Tiket
-        $ticket->update(['status' => $request->status]);
+        // 🔹 Update status tiket
+        $ticket->update([
+            'status' => $request->status
+        ]);
 
-        // 🔹 Simpan Komentar Jika Ada
+        // 🔹 Pastikan komentar tersimpan
         if (!empty($request->comment)) {
+            // \Log::info("Menambahkan komentar untuk tiket ID: {$ticket->id}");
+
             Comment::create([
                 'ticket_id' => $ticket->id,
                 'user_id' => Auth::id(),
@@ -64,6 +74,7 @@ class TicketController extends Controller
         return redirect()->route('staff.tickets.show', $ticket->id)
             ->with('success', 'Status tiket diperbarui dan komentar ditambahkan.');
     }
+
 
     public function assign(Ticket $ticket)
     {

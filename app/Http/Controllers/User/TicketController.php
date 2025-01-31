@@ -82,14 +82,13 @@ class TicketController extends Controller
         return redirect()->route('user.tickets.index')->with('success', 'Tiket Software berhasil dibuat.');
     }
         // Menampilkan detail tiket
-    public function show(Ticket $ticket)
-    {
-        if ($ticket->user_id !== Auth::id()) {
-            return redirect()->route('user.tickets.index')->with('error', 'Unauthorized access!');
-        }
+        public function show(Ticket $ticket)
+        {
+            // Pastikan tiket memiliki relasi user, assigned staff, dan comments
+            $ticket->load(['user', 'assignedStaff', 'comments.user']);
 
-        return view('user.tickets.show', compact('ticket'));
-    }
+            return view('user.tickets.show', compact('ticket'));
+        }
 
     public function createSoftware()
     {

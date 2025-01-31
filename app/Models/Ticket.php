@@ -15,18 +15,12 @@ class Ticket extends Model
     ];
 
     protected $casts = [
-        'status' => 'string', // Laravel akan membaca ENUM sebagai string
+        'status' => 'string',
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
-    }
-
-    public function setStatusAttribute($value)
-    {
-        $allowedStatuses = ['Open', 'In Progress', 'Closed', 'Resolved'];
-        $this->attributes['status'] = in_array($value, $allowedStatuses) ? $value : 'Open';
     }
 
     public function assignedStaff()
@@ -36,10 +30,9 @@ class Ticket extends Model
         ]);
     }
 
+    // 🔥 **Tambahkan relasi comments di sini!**
     public function comments()
     {
-        return $this->hasMany(Comment::class, 'ticket_id'); // Pastikan 'ticket_id' sesuai dengan nama kolom di database
+        return $this->hasMany(Comment::class, 'ticket_id', 'id');
     }
-
-
 }
