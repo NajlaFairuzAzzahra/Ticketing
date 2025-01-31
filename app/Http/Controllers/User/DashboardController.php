@@ -4,16 +4,17 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Ticket;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        $tickets = Auth::user()->tickets;
+        // Hitung jumlah tiket milik user yang sedang login berdasarkan status
         $stats = [
-            'open_tickets' => $tickets->where('status', 'open')->count(),
-            'in_progress_tickets' => $tickets->where('status', 'in_progress')->count(),
-            'closed_tickets' => $tickets->where('status', 'closed')->count(),
+            'open_tickets' => Ticket::where('user_id', Auth::id())->where('status', 'Open')->count(),
+            'in_progress_tickets' => Ticket::where('user_id', Auth::id())->where('status', 'In Progress')->count(),
+            'closed_tickets' => Ticket::where('user_id', Auth::id())->where('status', 'Closed')->count(),
         ];
 
         return view('user.dashboard', compact('stats'));
