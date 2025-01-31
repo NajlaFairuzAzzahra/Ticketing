@@ -33,8 +33,8 @@
                         <a href="{{ route('admin.canned-responses') }}" class="block px-4 py-2 rounded hover:bg-gray-700 {{ request()->routeIs('admin.canned-responses') ? 'bg-gray-700' : '' }}">
                             Canned Responses
                         </a>
-                        <a href="{{ route('admin.notifications') }}" class="block px-4 py-2 rounded hover:bg-gray-700 {{ request()->routeIs('admin.notifications') ? 'bg-gray-700' : '' }}">
-                            Notifikasi
+                        <a href="{{ route('notifications.index') }}" class="block px-4 py-2 rounded hover:bg-gray-700">
+                            🔔 Notifikasi ({{ Auth::user()->unreadNotifications->count() }})
                         </a>
                         <a href="{{ route('admin.profile') }}" class="block px-4 py-2 rounded hover:bg-gray-700 {{ request()->routeIs('admin.profile') ? 'bg-gray-700' : '' }}">
                             Profil

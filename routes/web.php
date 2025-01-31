@@ -10,6 +10,8 @@ use App\Http\Controllers\Admin\AdminDepartmentController;
 use App\Http\Controllers\Admin\AdminClientController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\NotificationController;
+
 
 
 
@@ -55,6 +57,17 @@ Route::middleware(['auth', 'role:Admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/departments', [AdminDepartmentController::class, 'index'])->name('departments');
     Route::get('/clients', [AdminClientController::class, 'index'])->name('clients');
     Route::get('/notifications', function () { return view('admin.notifications'); })->name('notifications');
+
+        // ✅ **Tambahkan Route Canned Responses**
+        Route::get('/canned-responses', function () {
+            return view('admin.canned-responses');
+        })->name('canned-responses');
+
+        Route::get('/profile', function () {
+            return view('admin.profile'); // Pastikan ada file 'admin/profile.blade.php'
+        })->name('profile');
+
+
 });
 
 
@@ -97,4 +110,9 @@ Route::middleware(['auth', 'role:Staff'])->prefix('staff')->name('staff.')->grou
     Route::put('/tickets/{ticket}/resolve', [\App\Http\Controllers\Staff\TicketController::class, 'resolve'])->name('tickets.resolve');
 });
 
-
+// ✅ Rute Notifikasi (Berlaku untuk semua role: Admin, Staff, User)
+Route::middleware(['auth'])->group(function () {
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
+    Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.readAll');
+});

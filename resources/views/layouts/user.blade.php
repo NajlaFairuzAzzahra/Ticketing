@@ -26,6 +26,9 @@
                 <a href="{{ route('user.tickets.index') }}" class="block px-4 py-2 rounded hover:bg-gray-700 {{ request()->routeIs('user.tickets.*') ? 'bg-gray-700' : '' }}">
                     Daftar Tiket
                 </a>
+                <a href="{{ route('notifications.index') }}" class="block px-4 py-2 rounded hover:bg-gray-700 {{ request()->routeIs('notifications.index') ? 'bg-gray-700' : '' }}">
+                    🔔 Notifikasi <span class="bg-red-500 text-white px-2 py-1 text-sm rounded-full">{{ Auth::user()->unreadNotifications->count() }}</span>
+                </a>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button type="submit" class="w-full text-left px-4 py-2 rounded hover:bg-red-600">

@@ -20,6 +20,9 @@
                 <a href="{{ route('staff.tickets.index') }}" class="block px-4 py-2 rounded hover:bg-gray-700 {{ request()->routeIs('staff.tickets.index') ? 'bg-gray-700' : '' }}">
                     Tiket
                 </a>
+                <a href="{{ route('notifications.index') }}" class="block px-4 py-2 rounded hover:bg-gray-700 {{ request()->routeIs('notifications.index') ? 'bg-gray-700' : '' }}">
+                    🔔 Notifikasi <span class="bg-red-500 text-white px-2 py-1 text-sm rounded-full">{{ Auth::user()->unreadNotifications->count() }}</span>
+                </a>
             </nav>
 
             <!-- Logout -->

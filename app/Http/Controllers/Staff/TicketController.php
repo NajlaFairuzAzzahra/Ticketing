@@ -9,6 +9,10 @@ use App\Models\Comment;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Log;
+use App\Notifications\TicketNotification;
+use Illuminate\Support\Facades\Notification;
+
+
 
 class TicketController extends Controller
 {
@@ -62,14 +66,15 @@ class TicketController extends Controller
 
         // 🔹 Pastikan komentar tersimpan
         if (!empty($request->comment)) {
-            // \Log::info("Menambahkan komentar untuk tiket ID: {$ticket->id}");
-
             Comment::create([
                 'ticket_id' => $ticket->id,
                 'user_id' => Auth::id(),
                 'content' => $request->comment
             ]);
         }
+
+        // ✅ Kirim Notifikasi ke User bahwa tiket mereka diperbarui
+        Notification::send($ticket->user, new TicketNotification($ticket, "Tiket Anda telah diperbarui ke status '{$ticket->status}'"));
 
         return redirect()->route('staff.tickets.show', $ticket->id)
             ->with('success', 'Status tiket diperbarui dan komentar ditambahkan.');
@@ -84,8 +89,11 @@ class TicketController extends Controller
 
         $ticket->update([
             'assigned_to' => Auth::id(),
-            'status' => 'In Progress' // Secara otomatis ubah status menjadi "In Progress"
+            'status' => 'In Progress'
         ]);
+
+        // ✅ Kirim Notifikasi ke IT Staff yang mengambil tiket
+        Notification::send(Auth::user(), new TicketNotification($ticket, "Anda telah ditugaskan ke tiket #{$ticket->id}"));
 
         return redirect()->route('staff.tickets.show', $ticket->id)->with('success', 'Tiket berhasil diambil alih.');
     }

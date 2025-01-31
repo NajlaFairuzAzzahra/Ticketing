@@ -8,6 +8,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use App\Models\User;
+use App\Notifications\TicketNotification;
+use Illuminate\Support\Facades\Notification;
+
+
 
 class TicketController extends Controller
 {
@@ -27,6 +32,11 @@ class TicketController extends Controller
     public function store(Request $request)
     {
         Log::info('📥 Data Tiket Diterima:', $request->all());
+
+            // ✅ Ambil Admin & Staff Users
+    $admin = User::where('role_id', 1)->first();
+    $staffUsers = User::where('role_id', 2)->get();
+
 
         // ✅ Cek apakah tiket yang dikirim adalah hardware atau software
         if ($request->ticket_type === 'hardware') {
@@ -50,7 +60,7 @@ class TicketController extends Controller
                 Log::info('📂 File berhasil disimpan:', ['path' => $attachmentPath]);
             }
 
-            Ticket::create([
+            $ticket = Ticket::create([
                 'user_id' => Auth::id(),
                 'system' => $validated['infrastructure'],
                 'sub_system' => $validated['hardware'],
@@ -64,6 +74,18 @@ class TicketController extends Controller
                 'attachment' => $attachmentPath,
                 'link' => $validated['link'] ?? null
             ]);
+
+            // ✅ Kirim Notifikasi ke Admin & IT Staff
+            $admin = User::where('role_id', 1)->first();
+            $staffUsers = User::where('role_id', 2)->get();
+
+            if ($admin) {
+                Notification::send($admin, new TicketNotification($ticket, "Tiket baru telah dibuat oleh {$ticket->requester}"));
+            }
+
+            if ($staffUsers->count()) {
+                Notification::send($staffUsers, new TicketNotification($ticket, "Tiket baru menunggu untuk diambil alih."));
+            }
 
             return redirect()->route('user.tickets.index')->with('success', 'Tiket Hardware berhasil dibuat.');
         }
@@ -88,7 +110,7 @@ class TicketController extends Controller
             $attachmentPath = $request->file('attachment')->store('attachments', 'public');
         }
 
-        Ticket::create([
+        $ticket = Ticket::create([
             'user_id' => Auth::id(),
             'system' => $validated['system'],
             'sub_system' => $validated['sub_system'],
@@ -103,10 +125,18 @@ class TicketController extends Controller
             'link' => $validated['link'] ?? null
         ]);
 
+        // ✅ Kirim Notifikasi ke Admin & IT Staff
+        if ($admin) {
+            Notification::send($admin, new TicketNotification($ticket, "Tiket baru telah dibuat oleh {$ticket->requester}"));
+        }
+
+        if ($staffUsers->count()) {
+            Notification::send($staffUsers, new TicketNotification($ticket, "Tiket baru menunggu untuk diambil alih."));
+        }
+
         return redirect()->route('user.tickets.index')->with('success', 'Tiket Software berhasil dibuat.');
     }
-
-    // ✅ Menampilkan detail tiket
+        // ✅ Menampilkan detail tiket
     public function show(Ticket $ticket)
     {
         $ticket->load(['user', 'assignedStaff', 'comments.user']);

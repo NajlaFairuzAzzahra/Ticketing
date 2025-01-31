@@ -44,8 +44,8 @@
                 <a href="{{ route('admin.tickets.index') }}" class="block px-4 py-2 rounded hover:bg-gray-700 {{ request()->routeIs('admin.tickets.index') ? 'bg-gray-700' : '' }}">
                     Tickets
                 </a>
-                <a href="{{ route('admin.notifications') }}" class="block px-4 py-2 rounded hover:bg-gray-700 {{ request()->routeIs('admin.notifications') ? 'bg-gray-700' : '' }}">
-                    Notifications
+                <a href="{{ route('notifications.index') }}" class="block px-4 py-2 rounded hover:bg-gray-700 {{ request()->routeIs('notifications.index') ? 'bg-gray-700' : '' }}">
+                    🔔 Notifikasi <span class="bg-red-500 text-white px-2 py-1 text-sm rounded-full">{{ Auth::user()->unreadNotifications->count() }}</span>
                 </a>
             </nav>
 
