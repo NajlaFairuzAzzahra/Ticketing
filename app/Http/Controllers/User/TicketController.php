@@ -33,7 +33,6 @@ class TicketController extends Controller
     {
         Log::info('📥 Data Tiket Diterima:', $request->all());
 
-            // ✅ Ambil Admin & Staff Users
     $admin = User::where('role_id', 1)->first();
     $staffUsers = User::where('role_id', 2)->get();
 
@@ -84,7 +83,7 @@ class TicketController extends Controller
             }
 
             if ($staffUsers->count()) {
-                Notification::send($staffUsers, new TicketNotification($ticket, "Tiket baru menunggu untuk diambil alih."));
+                Notification::send($staffUsers, new TicketNotification($ticket, "Tiket baru telah dibuat oleh {$ticket->requester}"));
             }
 
             return redirect()->route('user.tickets.index')->with('success', 'Tiket Hardware berhasil dibuat.');

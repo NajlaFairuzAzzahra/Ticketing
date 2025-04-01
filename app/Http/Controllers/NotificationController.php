@@ -47,4 +47,12 @@ class NotificationController extends Controller
 
         return back();
     }
+
+    public function destroy($id)
+    {
+    $notification = DatabaseNotification::findOrFail($id);
+    $notification->delete(); // Hard delete from database
+
+    return back()->with('success', 'Notifikasi berhasil dihapus permanen.');
+    }
 }
