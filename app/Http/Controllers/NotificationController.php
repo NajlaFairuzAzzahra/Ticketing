@@ -15,9 +15,8 @@ class NotificationController extends Controller
         }
 
         $user = Auth::user();
-        $notifications = $user->unreadNotifications;
+        $notifications = $user->notifications; // ambil SEMUA notifikasi
 
-        // 🔥 Gunakan role_id untuk menentukan layout yang benar
         $layout = ($user->role_id == 1) ? 'admin' : (($user->role_id == 2) ? 'staff' : 'user');
 
         return view('notifications.index', compact('notifications', 'layout'));
@@ -25,27 +24,20 @@ class NotificationController extends Controller
 
     public function markAsRead($id)
     {
-        if (!Auth::check()) {
-            return redirect()->route('login');
-        }
+        $notification = DatabaseNotification::findOrFail($id);
 
-        $notification = DatabaseNotification::find($id);
-        if ($notification && $notification->notifiable_id == Auth::id()) {
+        if ($notification->read_at === null) {
             $notification->markAsRead();
         }
 
-        return back();
+        return back()->with('success', 'Notifikasi telah ditandai sebagai dibaca.');
     }
 
     public function markAllAsRead()
     {
-        if (!Auth::check()) {
-            return redirect()->route('login');
-        }
-
-        Auth::user()->unreadNotifications->markAsRead();
-
-        return back();
+        $user = Auth::user();
+        $user->unreadNotifications->markAsRead();
+        return back()->with('success', 'Semua notifikasi telah ditandai sebagai dibaca.');
     }
 
     public function destroy($id)
