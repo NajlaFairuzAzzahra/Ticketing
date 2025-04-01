@@ -12,14 +12,23 @@ use Illuminate\Support\Facades\Notification;
 
 class AdminTicketController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $tickets = Ticket::with('user')->get();
+        $query = Ticket::with('user');
 
-        // Debugging: Cek apakah ada tiket tanpa user
-        foreach ($tickets as $ticket) {
-            Log::info("DEBUG - Ticket ID: {$ticket->id}, User: " . optional($ticket->user)->name);
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('id', 'like', "%$search%")
+                  ->orWhere('description', 'like', "%$search%");
+            });
         }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $tickets = $query->latest()->paginate(10)->withQueryString();
 
         return view('admin.tickets.index', compact('tickets'));
     }
