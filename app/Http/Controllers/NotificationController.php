@@ -40,6 +40,18 @@ class NotificationController extends Controller
         return back()->with('success', 'Semua notifikasi telah ditandai sebagai dibaca.');
     }
 
+    public function markAsUnread($id)
+    {
+    $notification = DatabaseNotification::findOrFail($id);
+
+    if ($notification->read_at !== null) {
+        $notification->update(['read_at' => null]);
+    }
+
+    return back()->with('success', 'Notifikasi ditandai sebagai belum dibaca.');
+    }
+
+
     public function destroy($id)
     {
     $notification = DatabaseNotification::findOrFail($id);

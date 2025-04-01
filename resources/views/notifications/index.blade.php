@@ -27,11 +27,16 @@
 
                 <div class="flex gap-3">
                     @if($isUnread)
-                        <form method="POST" action="{{ route('notifications.read', $notification->id) }}">
-                            @csrf
-                            <button type="submit" class="text-blue-600 hover:underline text-sm">Tandai Dibaca</button>
-                        </form>
-                    @endif
+                    <form method="POST" action="{{ route('notifications.read', $notification->id) }}">
+                        @csrf
+                        <button type="submit" class="text-blue-600 hover:underline text-sm">Tandai Dibaca</button>
+                    </form>
+                @else
+                    <form method="POST" action="{{ route('notifications.unread', $notification->id) }}">
+                        @csrf
+                        <button type="submit" class="text-yellow-600 hover:underline text-sm">Tandai Belum Dibaca</button>
+                    </form>
+                @endif
 
                     <button onclick="openModal('{{ $notification->id }}')" class="text-red-600 hover:underline text-sm">
                         Hapus
