@@ -12,11 +12,8 @@ use App\Models\User;
 use App\Notifications\TicketNotification;
 use Illuminate\Support\Facades\Notification;
 
-
-
 class TicketController extends Controller
 {
-    // ✅ Menampilkan semua tiket milik user
     public function index()
     {
         $tickets = Ticket::where('user_id', Auth::id())->get();
@@ -28,16 +25,14 @@ class TicketController extends Controller
         return view('user.tickets.create');
     }
 
-    // ✅ Menyimpan tiket baru
     public function store(Request $request)
     {
         Log::info('📥 Data Tiket Diterima:', $request->all());
 
-    $admin = User::where('role_id', 1)->first();
-    $staffUsers = User::where('role_id', 2)->get();
+        $admin = User::where('role_id', 1)->first();
+        $staffUsers = User::where('role_id', 2)->get();
 
-
-        // ✅ Cek apakah tiket yang dikirim adalah hardware atau software
+        // Hardware
         if ($request->ticket_type === 'hardware') {
             $validated = $request->validate([
                 'infrastructure' => 'required|string',
@@ -51,12 +46,9 @@ class TicketController extends Controller
                 'link' => 'nullable|url'
             ]);
 
-            // ✅ Handle file upload
             $attachmentPath = null;
             if ($request->hasFile('attachment')) {
-                Log::info('📂 File terdeteksi:', ['filename' => $request->file('attachment')->getClientOriginalName()]);
                 $attachmentPath = $request->file('attachment')->store('attachments', 'public');
-                Log::info('📂 File berhasil disimpan:', ['path' => $attachmentPath]);
             }
 
             $ticket = Ticket::create([
@@ -74,22 +66,20 @@ class TicketController extends Controller
                 'link' => $validated['link'] ?? null
             ]);
 
-            // ✅ Kirim Notifikasi ke Admin & IT Staff
-            $admin = User::where('role_id', 1)->first();
-            $staffUsers = User::where('role_id', 2)->get();
+            $ticket->load('user'); // ✅ Untuk keperluan notifikasi
 
             if ($admin) {
-                Notification::send($admin, new TicketNotification($ticket, "Tiket baru telah dibuat oleh {$ticket->requester}"));
+                Notification::send($admin, new TicketNotification($ticket));
             }
 
             if ($staffUsers->count()) {
-                Notification::send($staffUsers, new TicketNotification($ticket, "Tiket baru telah dibuat oleh {$ticket->requester}"));
+                Notification::send($staffUsers, new TicketNotification($ticket));
             }
 
             return redirect()->route('user.tickets.index')->with('success', 'Tiket Hardware berhasil dibuat.');
         }
 
-        // ✅ Jika bukan hardware, anggap software
+        // Software
         $validated = $request->validate([
             'system' => 'required|string',
             'sub_system' => 'required|string',
@@ -103,7 +93,6 @@ class TicketController extends Controller
             'link' => 'nullable|url'
         ]);
 
-        // ✅ Handle file upload
         $attachmentPath = null;
         if ($request->hasFile('attachment')) {
             $attachmentPath = $request->file('attachment')->store('attachments', 'public');
@@ -124,25 +113,25 @@ class TicketController extends Controller
             'link' => $validated['link'] ?? null
         ]);
 
-        // ✅ Kirim Notifikasi ke Admin & IT Staff
+        $ticket->load('user'); // ✅ Supaya notifikasi bisa akses nama user
+
         if ($admin) {
-            Notification::send($admin, new TicketNotification($ticket, "Tiket baru telah dibuat oleh {$ticket->requester}"));
+            Notification::send($admin, new TicketNotification($ticket));
         }
 
         if ($staffUsers->count()) {
-            Notification::send($staffUsers, new TicketNotification($ticket, "Tiket baru menunggu untuk diambil alih."));
+            Notification::send($staffUsers, new TicketNotification($ticket));
         }
 
         return redirect()->route('user.tickets.index')->with('success', 'Tiket Software berhasil dibuat.');
     }
-        // ✅ Menampilkan detail tiket
+
     public function show(Ticket $ticket)
     {
         $ticket->load(['user', 'assignedStaff', 'comments.user']);
         return view('user.tickets.show', compact('ticket'));
     }
 
-    // ✅ Menambahkan komentar pada tiket
     public function addComment(Request $request, Ticket $ticket)
     {
         if ($ticket->user_id !== Auth::id()) {
