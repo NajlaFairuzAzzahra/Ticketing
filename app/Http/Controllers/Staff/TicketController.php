@@ -17,23 +17,30 @@ use Illuminate\Support\Facades\Notification;
 class TicketController extends Controller
 {
     // ✅ Menampilkan daftar tiket IT Staff
-    public function index()
+    public function index(Request $request)
     {
-        $tickets = Ticket::whereNotNull('assigned_to')->get();
+        $query = Ticket::with('user');
+
+        // Hanya tiket yang ditugaskan ke staff ini
+        $query->where('assigned_to', auth()->id());
+
+        // 🔍 Search
+        if ($request->filled('search')) {
+            $query->where(function ($q) use ($request) {
+                $q->where('id', 'like', '%' . $request->search . '%')
+                  ->orWhere('description', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        // 🎯 Filter status
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $tickets = $query->latest()->paginate(6)->withQueryString();
+
         return view('staff.tickets.index', compact('tickets'));
     }
-
-        // Edit tiket (ambil alih atau ubah status)
-        public function edit(Ticket $ticket)
-        {
-            if (!$ticket->assigned_to) {
-                // Jika tiket belum ditugaskan, biarkan IT Staff mengambil alih
-
-                $ticket->update(['assigned_to' => Auth::id()]);
-            }
-
-            return view('staff.tickets.edit', compact('ticket'));
-        }
 
 
     // ✅ Menampilkan detail tiket

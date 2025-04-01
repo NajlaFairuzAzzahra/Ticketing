@@ -4,6 +4,22 @@
 <div class="container mx-auto p-6">
     <h1 class="text-2xl font-bold mb-6">Manajemen Tiket IT Staff</h1>
 
+    <form method="GET" action="{{ route('staff.tickets.index') }}" class="mb-6 flex flex-wrap items-center gap-4">
+        <input type="text" name="search" value="{{ request('search') }}" class="border rounded px-4 py-2 w-64" placeholder="Cari ID atau Deskripsi">
+
+        <select name="status" class="border rounded px-3 py-2">
+            <option value="">Semua Status</option>
+            <option value="Open" {{ request('status') === 'Open' ? 'selected' : '' }}>Open</option>
+            <option value="In Progress" {{ request('status') === 'In Progress' ? 'selected' : '' }}>In Progress</option>
+            <option value="Resolved" {{ request('status') === 'Resolved' ? 'selected' : '' }}>Resolved</option>
+            <option value="Closed" {{ request('status') === 'Closed' ? 'selected' : '' }}>Closed</option>
+        </select>
+
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+            Filter
+        </button>
+    </form>
+
     <div class="mt-6 bg-white shadow-md rounded-lg">
         <table class="w-full border-collapse">
             <thead class="bg-gray-200">
@@ -59,6 +75,10 @@
         </table>
     </div>
 </div>
+<div class="mt-4">
+    {{ $tickets->links() }}
+</div>
+
 
 <!-- 🔥 Script untuk Modal -->
 <script>
