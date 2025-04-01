@@ -137,25 +137,6 @@ class TicketController extends Controller
     }
 
 
-
-
-    // ✅ Mengupdate status tiket
-    // public function updateStatus(Request $request, Ticket $ticket)
-    // {
-    //     $request->validate(['status' => 'required|in:Open,In Progress,Resolved,Closed']);
-    //     $ticket->update(['status' => $request->status]);
-
-    //     return redirect()->route('staff.tickets.index')->with('success', 'Status tiket berhasil diperbarui.');
-    // }
-
-    // ✅ IT Staff mengambil alih tiket
-    // public function assignToSelf(Ticket $ticket)
-    // {
-    //     $ticket->update(['assigned_to' => Auth::id()]);
-
-    //     return redirect()->route('staff.tickets.index')->with('success', 'Tiket berhasil diambil alih.');
-    // }
-
     // ✅ Menambahkan komentar pada tiket
     public function addComment(Request $request, Ticket $ticket)
     {

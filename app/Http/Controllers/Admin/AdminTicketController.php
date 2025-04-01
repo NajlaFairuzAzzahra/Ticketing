@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Models\Ticket;
 use App\Models\User;
+use App\Notifications\TicketNotification;
+use Illuminate\Support\Facades\Notification;
 
 class AdminTicketController extends Controller
 {
@@ -39,6 +41,22 @@ class AdminTicketController extends Controller
             'status' => $request->status,
             'assigned_to' => $request->assigned_to,
         ]);
+
+        // ✅ Kirim Notifikasi jika tiket di-assign ke staff
+        if ($request->assigned_to) {
+            $staff = User::find($request->assigned_to);
+
+            if ($staff) {
+                Notification::send(
+                    $staff,
+                    new TicketNotification(
+                        $ticket,
+                        "Tiket #{$ticket->id} telah ditugaskan kepada Anda oleh Admin.",
+                        "Tiket Telah Ditugaskan"
+                    )
+                );
+            }
+        }
 
         return redirect()->route('admin.tickets.index')->with('success', 'Tiket berhasil diperbarui.');
     }
