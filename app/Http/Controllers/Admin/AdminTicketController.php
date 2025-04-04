@@ -28,7 +28,7 @@ class AdminTicketController extends Controller
             $query->where('status', $request->status);
         }
 
-        $tickets = $query->latest()->paginate(10)->withQueryString();
+        $tickets = $query->latest()->paginate(6)->withQueryString();
 
         return view('admin.tickets.index', compact('tickets'));
     }

@@ -15,12 +15,13 @@ class NotificationController extends Controller
         }
 
         $user = Auth::user();
-        $notifications = $user->notifications; // ambil SEMUA notifikasi
+        $notifications = $user->notifications()->latest()->paginate(6); // ✅ Pagination
 
         $layout = ($user->role_id == 1) ? 'admin' : (($user->role_id == 2) ? 'staff' : 'user');
 
         return view('notifications.index', compact('notifications', 'layout'));
     }
+
 
     public function markAsRead($id)
     {
@@ -59,4 +60,13 @@ class NotificationController extends Controller
 
     return back()->with('success', 'Notifikasi berhasil dihapus permanen.');
     }
+
+    public function destroyAll()
+{
+    $user = Auth::user();
+    $user->notifications()->delete(); // Hard delete semua notifikasi
+
+    return back()->with('success', 'Semua notifikasi berhasil dihapus permanen.');
+}
+
 }
