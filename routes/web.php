@@ -52,6 +52,10 @@ Route::middleware(['auth', 'role:Admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/tickets/{ticket}/edit', [AdminTicketController::class, 'edit'])->name('tickets.edit');
     Route::put('/tickets/{ticket}', [AdminTicketController::class, 'update'])->name('tickets.update');
     Route::delete('/tickets/{ticket}', [AdminTicketController::class, 'destroy'])->name('tickets.destroy');
+    Route::get('/tickets/trashed', [AdminTicketController::class, 'trashed'])->name('tickets.trashed');
+    Route::put('/tickets/{id}/restore', [AdminTicketController::class, 'restore'])->name('tickets.restore');
+    Route::delete('/tickets/{id}/force-delete', [AdminTicketController::class, 'forceDelete'])->name('tickets.forceDelete');
+
 
     // ✅ Rute Lainnya
     Route::get('/departments', [AdminDepartmentController::class, 'index'])->name('departments');
@@ -108,6 +112,7 @@ Route::middleware(['auth', 'role:Staff'])->prefix('staff')->name('staff.')->grou
     Route::put('/tickets/{ticket}/assign', [\App\Http\Controllers\Staff\TicketController::class, 'assign'])->name('tickets.assign');
     Route::post('/tickets/{ticket}/comment', [\App\Http\Controllers\Staff\TicketController::class, 'comment'])->name('tickets.comment');
     Route::put('/tickets/{ticket}/resolve', [\App\Http\Controllers\Staff\TicketController::class, 'resolve'])->name('tickets.resolve');
+    
 });
 
 // ✅ Notifikasi berdasarkan role

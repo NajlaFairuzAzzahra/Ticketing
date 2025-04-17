@@ -75,4 +75,27 @@ class AdminTicketController extends Controller
         $ticket->delete(); // Soft delete
         return redirect()->route('admin.tickets.index')->with('success', 'Tiket berhasil dihapus.');
     }
+
+        public function trashed()
+    {
+        $tickets = Ticket::onlyTrashed()->with('user')->paginate(10);
+        return view('admin.tickets.trashed', compact('tickets'));
+    }
+
+    public function restore($id)
+    {
+        $ticket = Ticket::withTrashed()->findOrFail($id);
+        $ticket->restore();
+
+        return redirect()->route('admin.tickets.trashed')->with('success', 'Tiket berhasil dipulihkan.');
+    }
+
+    public function forceDelete($id)
+    {
+        $ticket = Ticket::withTrashed()->findOrFail($id);
+        $ticket->forceDelete();
+
+        return redirect()->route('admin.tickets.trashed')->with('success', 'Tiket berhasil dihapus permanen.');
+    }
+
 }

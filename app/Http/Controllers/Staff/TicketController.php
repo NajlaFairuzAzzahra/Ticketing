@@ -164,4 +164,6 @@ class TicketController extends Controller
 
         return redirect()->route('staff.tickets.index')->with('success', 'Tiket berhasil dihapus.');
     }
+
+    
 }

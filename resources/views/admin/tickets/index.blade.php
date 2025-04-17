@@ -20,6 +20,10 @@
         </button>
     </form>
 
+    <a href="{{ route('admin.tickets.trashed') }}" class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 mb-4 inline-block">
+        Arsip Tiket
+    </a>
+
 
     <div class="mt-6 bg-white shadow-md rounded-lg">
         <table class="w-full border-collapse">
